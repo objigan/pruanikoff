@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Пряникофф — Формы для пряников</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Подключаем библиотеку Fuse.js для умного поиска -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Пряникофф</h1>
+        <p class="subtitle">Поиск по каталогу форм для пряников</p>
+        
+        <!-- Это поле поиска -->
+        <input type="search" id="search-input" placeholder="Введите название или артикул (например: 193 или человечек)...">
+        
+        <!-- Сюда будут выводиться результаты -->
+        <div id="results-container">
+            <p class="hint">Начните вводить название или артикул...</p>
+        </div>
+    </div>
+
+    <!-- Подключаем наш скрипт -->
+    <script src="script.js"></script>
+</body>
+</html>

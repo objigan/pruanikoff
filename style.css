@@ -1,0 +1,111 @@
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f8f5f0; /* Легкий пряничный фон */
+    color: #4a3b32;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 40px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #8b5e3c;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+#search-input {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 18px;
+    border: 2px solid #d2b48c;
+    border-radius: 10px;
+    box-sizing: border-box; /* Чтобы поле не вылезало за края */
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#search-input:focus {
+    border-color: #8b5e3c;
+}
+
+.hint {
+    text-align: center;
+    color: #aaa;
+    font-style: italic;
+}
+
+/* Стиль для карточки товара */
+.product-card {
+    background: white;
+    border: 1px solid #e0d6c8;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-top: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.product-card h3 {
+    margin: 0 0 5px 0;
+    color: #5d4037;
+    font-size: 1.2rem;
+}
+
+.product-card p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.product-card .sku {
+    font-weight: bold;
+    color: #8b5e3c;
+}
+.product-card {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.product-info {
+    flex-grow: 1;
+}
+
+.wb-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: #8b5e3c;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.wb-link:hover {
+    text-decoration: underline;
+}
