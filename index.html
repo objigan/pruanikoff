@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
 </head>
 <body>
-    <!-- Шапка сайта -->
     <header class="site-header">
         <div class="logo">Пряникофф</div>
         <button id="cart-btn" class="cart-button">
@@ -28,8 +27,15 @@
         
         <div id="results-container" class="grid-container"></div>
         
-        <h2 class="section-title" id="random-title">Популярные формы</h2>
-        <div id="random-container" class="grid-container"></div>
+        <!-- Блок для случайных карточек и кнопок листания -->
+        <div id="random-block">
+            <div id="random-container" class="grid-container"></div>
+            <div id="pagination-controls" class="pagination">
+                <button id="prev-btn" disabled>← Назад</button>
+                <span id="page-info">Стр. 1</span>
+                <button id="next-btn">Вперед →</button>
+            </div>
+        </div>
     </div>
 
     <!-- МОДАЛЬНОЕ ОКНО КОРЗИНЫ -->
@@ -37,17 +43,15 @@
         <div class="modal-content">
             <span class="close-btn" id="close-cart">&times;</span>
             <h2>Ваша корзина</h2>
-            <div id="cart-items-container">
-                <!-- Сюда будут вставляться товары -->
-            </div>
+            <div id="cart-items-container"></div>
             <div class="cart-total">
                 Итого: <span id="cart-total-price">0</span> ₽
             </div>
-            <!-- Сюда можно вставить ссылку на ваш Telegram или почту -->
             <button id="checkout-btn" class="checkout-btn">Оформить заказ</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- ?v=4 нужен чтобы браузер точно загрузил новый скрипт -->
+    <script src="script.js?v=4"></script>
 </body>
 </html>
