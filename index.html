@@ -9,27 +9,26 @@
 </head>
 <body>
     <header class="site-header">
+        <div class="header-left">
+            <!-- Кнопка О нас -->
+            <button id="about-btn" class="about-button">О нас</button>
+        </div>
         <div class="logo">Пряникофф</div>
-        <button id="cart-btn" class="cart-button">
-            🛒 Корзина (<span id="cart-count">0</span>)
-        </button>
+        <div class="header-right">
+            <button id="cart-btn" class="cart-button">
+                🛒 Корзина (<span id="cart-count">0</span>)
+            </button>
+        </div>
     </header>
 
     <div class="container">
-        <section class="about-section">
-            <h2>О компании «Пряникофф»</h2>
-            <p>Мы производим качественные и удобные формочки для пряников. Здесь будет ваш текст о том, кто вы и чем занимаетесь. Текст можно будет поменять в любой момент.</p>
-        </section>
-
         <div class="search-section">
             <h1>Поиск по каталогу</h1>
             <input type="search" id="search-input" placeholder="Введите название или артикул...">
         </div>
         
-        <!-- Контейнер для результатов поиска -->
         <div id="results-container" class="grid-container"></div>
         
-        <!-- Блок для случайных карточек и кнопок листания -->
         <div id="random-block">
             <div id="random-container" class="grid-container"></div>
             <div id="pagination-controls" class="pagination">
@@ -40,20 +39,38 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО "О НАС" -->
+    <div id="about-modal" class="modal">
+        <div class="modal-content about-modal-content">
+            <span class="close-btn" id="close-about">&times;</span>
+            <h2>О компании «Пряникофф»</h2>
+            <div class="about-text">
+                <p>🍪 <strong>Пряникофф</strong> — производим формы-вырубки для пряников и печенья.</p>
+                <p>🖨 Собственное производство на 3D-принтерах из пищевого PLA-пластика.</p>
+                <p>
+                    ✔️ Аккуратный край<br>
+                    ✔️ Чёткая форма<br>
+                    ✔️ Большой выбор готовых моделей
+                </p>
+                <p>💎 <strong>Нужна своя форма?</strong><br>
+                Изготовим вырубку по вашему эскизу, фото или идее — даже сложный контур. Напишите нам в сообщения.</p>
+                <p>🛍 Готовые формы можно купить в нашем магазине на Wildberries. Ищите «Пряникофф» или «вырубка PLA».</p>
+                <p>🎂 Для кондитеров, домашних пекарей и всех, кто любит красивые пряники.</p>
+                <p>📩 Индивидуальный заказ: напишите нам в <a href="https://vk.ru/pryanikoff_cookie" target="_blank" style="color: #005bff; font-weight: bold; text-decoration: underline;">наш VK</a>.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- МОДАЛЬНОЕ ОКНО КОРЗИНЫ -->
     <div id="cart-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn" id="close-cart">&times;</span>
             <h2>Ваша корзина</h2>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">Для заказа перейдите по ссылке на нужный маркетплейс.</p>
             <div id="cart-items-container"></div>
-            <div class="cart-total">
-                Итого: <span id="cart-total-price">0</span> ₽
-            </div>
-            <button id="checkout-btn" class="checkout-btn">Оформить заказ</button>
         </div>
     </div>
 
-    <!-- Подключаем скрипт с меткой v=5, чтобы сбросить кэш -->
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
 </body>
 </html>

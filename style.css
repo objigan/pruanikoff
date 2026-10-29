@@ -19,24 +19,37 @@ body {
     z-index: 100;
 }
 
+.header-left, .header-right {
+    flex: 1; /* Чтобы логотип был ровно по центру */
+}
+
+.header-right { text-align: right; }
+.header-left { text-align: left; }
+
 .logo { 
     font-size: 1.5rem; 
     font-weight: bold; 
     color: #8b5e3c; 
+    text-align: center;
 }
 
-.cart-button {
-    background-color: #8b5e3c; 
-    color: white; 
-    border: none;
-    padding: 10px 20px; 
+/* Кнопки в шапке */
+.about-button, .cart-button {
+    background-color: transparent; 
+    color: #8b5e3c; 
+    border: 2px solid #8b5e3c;
+    padding: 8px 16px; 
     border-radius: 20px; 
     cursor: pointer; 
     font-size: 1rem;
-    transition: background 0.3s;
+    font-weight: bold;
+    transition: all 0.3s;
 }
 
-.cart-button:hover { background-color: #6a442a; }
+.about-button:hover, .cart-button:hover { 
+    background-color: #8b5e3c; 
+    color: white; 
+}
 
 /* Контейнер */
 .container { 
@@ -45,19 +58,8 @@ body {
     padding: 20px; 
 }
 
-/* Блок О нас */
-.about-section {
-    background: white; 
-    padding: 20px; 
-    border-radius: 10px;
-    margin-bottom: 30px; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.about-section h2 { margin-top: 0; color: #8b5e3c; }
-
 /* Поиск */
-.search-section { text-align: center; margin-bottom: 30px; }
+.search-section { text-align: center; margin-bottom: 30px; margin-top: 20px; }
 .search-section h1 { color: #8b5e3c; }
 
 #search-input {
@@ -174,7 +176,7 @@ body {
     font-weight: bold;
 }
 
-/* Корзина */
+/* Модальные окна */
 .modal { 
     display: none; position: fixed; z-index: 1000; 
     left: 0; top: 0; width: 100%; height: 100%; 
@@ -185,34 +187,45 @@ body {
     background-color: #fff; padding: 20px 30px; border-radius: 12px; 
     width: 90%; max-width: 500px; max-height: 80vh; 
     overflow-y: auto; position: relative; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 .close-btn { 
     position: absolute; top: 10px; right: 20px; 
     font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; 
 }
 .close-btn:hover { color: #333; }
-.cart-item { 
-    display: flex; justify-content: space-between; align-items: center; 
-    border-bottom: 1px solid #eee; padding: 10px 0; 
+
+/* Стили для О Нас */
+.about-modal-content h2 { margin-top: 0; color: #8b5e3c; }
+.about-text p { margin-bottom: 15px; line-height: 1.5; }
+
+/* Стили для списка в корзине */
+.cart-list-item {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
 }
-.cart-item-info { flex-grow: 1; }
-.cart-item-title { font-weight: bold; font-size: 0.95rem; margin-bottom: 5px; }
-.cart-item-price { color: #8b5e3c; font-weight: bold; }
-.cart-item-controls { display: flex; align-items: center; gap: 10px; }
-.cart-item-controls button { 
-    background: #f0e6d2; border: 1px solid #d2b48c; border-radius: 4px; 
-    cursor: pointer; width: 30px; height: 30px; font-weight: bold; font-size: 1.1rem;
+.cart-list-title {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #4a3b32;
 }
-.cart-total { 
-    font-size: 1.2rem; font-weight: bold; text-align: right; 
-    margin-top: 20px; padding-top: 10px; border-top: 2px solid #eee; 
+.cart-links-row {
+    display: flex;
+    gap: 10px;
 }
-.checkout-btn { 
-    display: block; width: 100%; background-color: #8b5e3c; color: white; 
-    padding: 15px; text-align: center; border: none; border-radius: 8px; 
-    font-size: 1.1rem; margin-top: 20px; cursor: pointer; transition: background 0.3s;
+.cart-link-btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
 }
-.checkout-btn:hover { background-color: #6a442a; }
-.remove-btn { color: red; background: none; border: none; cursor: pointer; font-size: 1.2rem; margin-left: 5px; }
+.empty-cart-text { text-align: center; color: #777; margin: 20px 0; }
 
 .hint { text-align: center; color: #888; grid-column: 1 / -1; padding: 20px; }

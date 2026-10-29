@@ -12,23 +12,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const itemsPerPage = 12;
     let shuffledProducts = [];
 
-    // Элементы корзины
+    // Модальные окна
+    const aboutBtn = document.getElementById('about-btn');
+    const aboutModal = document.getElementById('about-modal');
+    const closeAbout = document.getElementById('close-about');
+
     const cartBtn = document.getElementById('cart-btn');
     const cartModal = document.getElementById('cart-modal');
     const closeCart = document.getElementById('close-cart');
+
     const cartCountSpan = document.getElementById('cart-count');
     const cartItemsContainer = document.getElementById('cart-items-container');
-    const cartTotalPrice = document.getElementById('cart-total-price');
-    const checkoutBtn = document.getElementById('checkout-btn');
     
     let fuse;
     let allProducts = [];
-    let cart = JSON.parse(localStorage.getItem('pryanikoff_cart')) || [];
+    
+    // Корзина теперь хранит массив объектов: {id, name, wbUrl, ozonUrl}
+    let cart = JSON.parse(localStorage.getItem('pryanikoff_cart_v2')) || [];
 
-    // Обновляем интерфейс корзины при старте
     updateCartUI();
 
-    // Загружаем ДВА файла (ВБ и Озон)
+    // Загружаем данные
     Promise.all([
         fetch('data.json').then(res => res.json()).catch(() => []),
         fetch('ozon.json').then(res => res.json()).catch(() => [])
@@ -37,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const wbArray = Array.isArray(wbData) ? wbData : [wbData];
         const ozonArray = Array.isArray(ozonData) ? ozonData : [ozonData];
 
-        // Создаем словарь Озона по названию для быстрого поиска
         const ozonMap = new Map();
         ozonArray.forEach(op => {
             const name = (op['Название'] || '').trim().toLowerCase();
@@ -47,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const mergedProducts = [];
         const usedOzonNames = new Set();
 
-        // Объединяем товары ВБ с товарами Озон
         wbArray.forEach(wbItem => {
             const name = (wbItem['Название'] || '').trim().toLowerCase();
             const ozonItem = ozonMap.get(name);
@@ -60,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
             mergedProducts.push(wbItem);
         });
 
-        // Добавляем товары, которые есть ТОЛЬКО на Озоне
         ozonArray.forEach(ozonItem => {
             const name = (ozonItem['Название'] || '').trim().toLowerCase();
             if (!usedOzonNames.has(name)) {
@@ -71,11 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         allProducts = mergedProducts;
 
-        // Настройка поиска
         const options = { keys: ['Название', 'Артикул продавца', 'Артикул'], threshold: 0.4 };
         fuse = new Fuse(allProducts, options);
 
-        // Перемешиваем ОДИН РАЗ при загрузке, чтобы не было повторов при листании
         shuffledProducts = [...allProducts].sort(() => 0.5 - Math.random());
         renderPage(1);
     })
@@ -141,18 +140,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const image = product['Картинка'] || 'https://via.placeholder.com/200?text=Нет+фото';
             
-            // Данные ВБ
             const wbPrice = product['isOzonOnly'] ? null : (product['Цена'] || '—');
             const wbUrl = product['isOzonOnly'] ? null : (product['URL'] || '#');
 
-            // Данные Озона
             const ozonPrice = product['ozonPrice'] || (product['isOzonOnly'] ? product['Цена'] : null);
             const ozonUrl = product['ozonUrl'] || (product['isOzonOnly'] ? product['URL'] : null);
 
             let buttonsHtml = '';
             let priceHtml = '';
 
-            // Собираем цены и кнопки
             if (wbPrice && ozonPrice) {
                 priceHtml = `<div class="price-container">
                     <div>WB: <span>${wbPrice} ₽</span></div>
@@ -186,11 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            // Обработчик добавления в корзину
             const btn = card.querySelector('.add-to-cart-btn');
             btn.addEventListener('click', () => {
-                const cartPrice = Number(wbPrice) || Number(ozonPrice) || 0;
-                addToCart(product, uniqueId, cartPrice);
+                addToCart(name, uniqueId, wbUrl, ozonUrl);
                 btn.textContent = 'Добавлено ✓';
                 setTimeout(() => btn.textContent = 'В корзину', 1500);
             });
@@ -199,103 +193,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- ЛОГИКА КОРЗИНЫ ---
-    function addToCart(product, id, price) {
-        const existingItem = cart.find(item => item.id === id);
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cart.push({
-                id: id,
-                name: product['Название'],
-                price: price,
-                quantity: 1
-            });
-        }
-        saveCart();
-    }
-
-    function removeFromCart(id) {
-        cart = cart.filter(item => item.id !== id);
-        saveCart();
-    }
-
-    function changeQuantity(id, delta) {
-        const item = cart.find(item => item.id === id);
-        if (item) {
-            item.quantity += delta;
-            if (item.quantity <= 0) {
-                removeFromCart(id);
-            } else {
-                saveCart();
-            }
+    // --- ЛОГИКА КОРЗИНЫ (ТОЛЬКО СПИСОК ССЫЛОК) ---
+    function addToCart(name, id, wbUrl, ozonUrl) {
+        // Проверяем, есть ли уже такой товар, чтобы не дублировать
+        const exists = cart.find(item => item.id === id);
+        if (!exists) {
+            cart.push({ id, name, wbUrl, ozonUrl });
+            saveCart();
         }
     }
 
     function saveCart() {
-        localStorage.setItem('pryanikoff_cart', JSON.stringify(cart));
+        localStorage.setItem('pryanikoff_cart_v2', JSON.stringify(cart));
         updateCartUI();
     }
 
-    // Обновление корзины
     function updateCartUI() {
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        cartCountSpan.textContent = totalItems;
-
+        cartCountSpan.textContent = cart.length;
         cartItemsContainer.innerHTML = '';
-        let totalPrice = 0;
 
         if (cart.length === 0) {
-            cartItemsContainer.innerHTML = '<p style="text-align:center; color:#777;">Корзина пуста</p>';
-            cartTotalPrice.textContent = '0';
+            cartItemsContainer.innerHTML = '<p class="empty-cart-text">Корзина пуста</p>';
             return;
         }
 
         cart.forEach(item => {
-            totalPrice += item.price * item.quantity;
             const div = document.createElement('div');
-            div.className = 'cart-item';
+            div.className = 'cart-list-item';
+            
+            let linksHtml = '';
+            if (item.wbUrl && item.wbUrl !== '#') {
+                linksHtml += `<a href="${item.wbUrl}" target="_blank" class="cart-link-btn wb-btn">Купить на WB</a>`;
+            }
+            if (item.ozonUrl && item.ozonUrl !== '#') {
+                linksHtml += `<a href="${item.ozonUrl}" target="_blank" class="cart-link-btn ozon-btn">Купить на Ozon</a>`;
+            }
+            if (!linksHtml) {
+                linksHtml = '<span style="font-size:0.8rem; color:red;">Ссылки нет</span>';
+            }
+
             div.innerHTML = `
-                <div class="cart-item-info">
-                    <div class="cart-item-title">${item.name}</div>
-                    <div class="cart-item-price">${item.price} ₽</div>
-                </div>
-                <div class="cart-item-controls">
-                    <button class="minus">-</button>
-                    <span>${item.quantity}</span>
-                    <button class="plus">+</button>
-                    <button class="remove-btn" title="Удалить">&times;</button>
-                </div>
+                <div class="cart-list-title">${item.name}</div>
+                <div class="cart-links-row">${linksHtml}</div>
             `;
-            // Привязываем кнопки
-            div.querySelector('.minus').addEventListener('click', () => changeQuantity(item.id, -1));
-            div.querySelector('.plus').addEventListener('click', () => changeQuantity(item.id, 1));
-            div.querySelector('.remove-btn').addEventListener('click', () => removeFromCart(item.id));
             cartItemsContainer.appendChild(div);
         });
-        cartTotalPrice.textContent = totalPrice;
     }
 
-    // Управление окном корзины
+    // --- УПРАВЛЕНИЕ ОКНАМИ ---
+    // О нас
+    aboutBtn.addEventListener('click', () => aboutModal.classList.add('active'));
+    closeAbout.addEventListener('click', () => aboutModal.classList.remove('active'));
+    aboutModal.addEventListener('click', (e) => { if (e.target === aboutModal) aboutModal.classList.remove('active'); });
+
+    // Корзина
     cartBtn.addEventListener('click', () => cartModal.classList.add('active'));
     closeCart.addEventListener('click', () => cartModal.classList.remove('active'));
     cartModal.addEventListener('click', (e) => { if (e.target === cartModal) cartModal.classList.remove('active'); });
-
-    // Оформление заказа
-    checkoutBtn.addEventListener('click', () => {
-        if (cart.length === 0) return alert('Корзина пуста!');
-        let orderText = "Здравствуйте! Хочу заказать:\n\n";
-        let total = 0;
-        cart.forEach(item => {
-            orderText += `- ${item.name} x${item.quantity} = ${item.price * item.quantity} ₽\n`;
-            total += item.price * item.quantity;
-        });
-        orderText += `\nИтого: ${total} ₽`;
-        
-        navigator.clipboard.writeText(orderText).then(() => {
-            alert("Заказ сформирован! Текст скопирован в буфер обмена. Вставьте его в наш Telegram.");
-        }).catch(() => {
-            alert("Не удалось скопировать автоматически. Вот ваш заказ:\n\n" + orderText);
-        });
-    });
 });
