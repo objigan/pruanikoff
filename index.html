@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пряникофф — Формы для пряников</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
@@ -25,6 +26,7 @@
             <input type="search" id="search-input" placeholder="Введите название или артикул...">
         </div>
         
+        <!-- Контейнер для результатов поиска -->
         <div id="results-container" class="grid-container"></div>
         
         <!-- Блок для случайных карточек и кнопок листания -->
@@ -51,7 +53,7 @@
         </div>
     </div>
 
-    <!-- ?v=4 нужен чтобы браузер точно загрузил новый скрипт -->
-    <script src="script.js?v=4"></script>
+    <!-- Подключаем скрипт с меткой v=5, чтобы сбросить кэш -->
+    <script src="script.js?v=5"></script>
 </body>
 </html>
