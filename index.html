@@ -16,24 +16,36 @@
     </header>
 
     <div class="container">
-        <!-- Блок О нас -->
         <section class="about-section">
             <h2>О компании «Пряникофф»</h2>
             <p>Мы производим качественные и удобные формочки для пряников. Здесь будет ваш текст о том, кто вы и чем занимаетесь. Текст можно будет поменять в любой момент.</p>
         </section>
 
-        <!-- Поиск -->
         <div class="search-section">
             <h1>Поиск по каталогу</h1>
             <input type="search" id="search-input" placeholder="Введите название или артикул...">
         </div>
         
-        <!-- Результаты поиска -->
         <div id="results-container" class="grid-container"></div>
         
-        <!-- 12 случайных карточек -->
         <h2 class="section-title" id="random-title">Популярные формы</h2>
         <div id="random-container" class="grid-container"></div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО КОРЗИНЫ -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-cart">&times;</span>
+            <h2>Ваша корзина</h2>
+            <div id="cart-items-container">
+                <!-- Сюда будут вставляться товары -->
+            </div>
+            <div class="cart-total">
+                Итого: <span id="cart-total-price">0</span> ₽
+            </div>
+            <!-- Сюда можно вставить ссылку на ваш Telegram или почту -->
+            <button id="checkout-btn" class="checkout-btn">Оформить заказ</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
