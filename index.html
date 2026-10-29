@@ -4,24 +4,38 @@
     <meta charset="UTF-8">
     <title>Пряникофф — Формы для пряников</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Подключаем библиотеку Fuse.js для умного поиска -->
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
 </head>
 <body>
+    <!-- Шапка сайта -->
+    <header class="site-header">
+        <div class="logo">Пряникофф</div>
+        <button id="cart-btn" class="cart-button">
+            🛒 Корзина (<span id="cart-count">0</span>)
+        </button>
+    </header>
+
     <div class="container">
-        <h1>Пряникофф</h1>
-        <p class="subtitle">Поиск по каталогу форм для пряников</p>
-        
-        <!-- Это поле поиска -->
-        <input type="search" id="search-input" placeholder="Введите название или артикул (например: 193 или человечек)...">
-        
-        <!-- Сюда будут выводиться результаты -->
-        <div id="results-container">
-            <p class="hint">Начните вводить название или артикул...</p>
+        <!-- Блок О нас -->
+        <section class="about-section">
+            <h2>О компании «Пряникофф»</h2>
+            <p>Мы производим качественные и удобные формочки для пряников. Здесь будет ваш текст о том, кто вы и чем занимаетесь. Текст можно будет поменять в любой момент.</p>
+        </section>
+
+        <!-- Поиск -->
+        <div class="search-section">
+            <h1>Поиск по каталогу</h1>
+            <input type="search" id="search-input" placeholder="Введите название или артикул...">
         </div>
+        
+        <!-- Результаты поиска -->
+        <div id="results-container" class="grid-container"></div>
+        
+        <!-- 12 случайных карточек -->
+        <h2 class="section-title" id="random-title">Популярные формы</h2>
+        <div id="random-container" class="grid-container"></div>
     </div>
 
-    <!-- Подключаем наш скрипт -->
     <script src="script.js"></script>
 </body>
 </html>
