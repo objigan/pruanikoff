@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateCartUI();
 
-    // Загружаем данные
+    // Загружаем данные из двух файлов
     Promise.all([
         fetch('data.json').then(res => res.json()).catch(() => []),
         fetch('ozon.json').then(res => res.json()).catch(() => [])
@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const wbArray = Array.isArray(wbData) ? wbData : [wbData];
         const ozonArray = Array.isArray(ozonData) ? ozonData : [ozonData];
 
+        // Ищем совпадения по названию для Озона
         const ozonMap = new Map();
         ozonArray.forEach(op => {
             const name = (op['Название'] || '').trim().toLowerCase();
@@ -50,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mergedProducts = [];
         const usedOzonNames = new Set();
 
+        // Объединяем ВБ и Озон
         wbArray.forEach(wbItem => {
             const name = (wbItem['Название'] || '').trim().toLowerCase();
             const ozonItem = ozonMap.get(name);
@@ -62,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mergedProducts.push(wbItem);
         });
 
+        // Добавляем то, что есть только на Озоне
         ozonArray.forEach(ozonItem => {
             const name = (ozonItem['Название'] || '').trim().toLowerCase();
             if (!usedOzonNames.has(name)) {
@@ -72,9 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         allProducts = mergedProducts;
 
+        // Настройка поиска
         const options = { keys: ['Название', 'Артикул продавца', 'Артикул'], threshold: 0.4 };
         fuse = new Fuse(allProducts, options);
 
+        // Перемешиваем для случайного вывода
         shuffledProducts = [...allProducts].sort(() => 0.5 - Math.random());
         renderPage(1);
     })
@@ -140,15 +145,18 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const image = product['Картинка'] || 'https://via.placeholder.com/200?text=Нет+фото';
             
+            // Данные ВБ
             const wbPrice = product['isOzonOnly'] ? null : (product['Цена'] || '—');
             const wbUrl = product['isOzonOnly'] ? null : (product['URL'] || '#');
 
+            // Данные Озона
             const ozonPrice = product['ozonPrice'] || (product['isOzonOnly'] ? product['Цена'] : null);
             const ozonUrl = product['ozonUrl'] || (product['isOzonOnly'] ? product['URL'] : null);
 
             let buttonsHtml = '';
             let priceHtml = '';
 
+            // Формируем цены и кнопки
             if (wbPrice && ozonPrice) {
                 priceHtml = `<div class="price-container">
                     <div>WB: <span>${wbPrice} ₽</span></div>
@@ -182,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
+            // Кнопка "В корзину"
             const btn = card.querySelector('.add-to-cart-btn');
             btn.addEventListener('click', () => {
                 addToCart(name, uniqueId, wbUrl, ozonUrl);
@@ -193,9 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- ЛОГИКА КОРЗИНЫ (ТОЛЬКО СПИСОК ССЫЛОК) ---
+    // --- ЛОГИКА КОРЗИНЫ ---
     function addToCart(name, id, wbUrl, ozonUrl) {
-        // Проверяем, есть ли уже такой товар, чтобы не дублировать
         const exists = cart.find(item => item.id === id);
         if (!exists) {
             cart.push({ id, name, wbUrl, ozonUrl });
@@ -234,8 +242,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             div.innerHTML = `
                 <div class="cart-list-title">${item.name}</div>
-                <div class="cart-links-row">${linksHtml}</div>
+                <div class="cart-links-row" style="align-items: center;">
+                    <div style="flex: 1; display: flex; gap: 10px;">
+                        ${linksHtml}
+                    </div>
+                    <button class="remove-cart-btn" title="Удалить из корзины">&times;</button>
+                </div>
             `;
+
+            // Обработчик удаления
+            const removeBtn = div.querySelector('.remove-cart-btn');
+            removeBtn.addEventListener('click', () => {
+                cart = cart.filter(cartItem => cartItem.id !== item.id);
+                saveCart();
+            });
+
             cartItemsContainer.appendChild(div);
         });
     }
